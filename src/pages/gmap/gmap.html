@@ -1,0 +1,55 @@
+<ion-header>
+  <ion-fab top right>
+    <button ion-fab (click)="onAdd()">
+      <ion-icon name="add"></ion-icon>
+    </button>
+  </ion-fab>
+
+  <ion-navbar>
+    <ion-title>Map</ion-title>
+  </ion-navbar>
+</ion-header>
+
+
+<ion-content padding>
+
+  <ion-fab bottom right>
+    <button ion-fab (click)="onLocate()">
+      <ion-icon name="pin"></ion-icon>
+    </button>
+    <button ion-fab (click)="onReloadWeather()">
+      <ion-icon name="partly-sunny"></ion-icon>
+    </button>
+  </ion-fab>
+
+  <ion-grid>
+    <ion-row>
+      <ion-col>
+        <ion-item>
+          <!--<ion-searchbar #search-->
+            <!--[(ngModel)]="searchInput"-->
+            <!--[showCancelButton]="true"-->
+            <!--(ionInput)="onSearchInput($event)">-->
+          <!--</ion-searchbar>-->
+        </ion-item>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <agm-map
+          [latitude]="currentLocation.lat" [longitude]="currentLocation.lng" [zoom]="zoom"
+          (mapClick)="onMapClick($event)">
+          <agm-marker [latitude]="currentLocation.lat" [longitude]="currentLocation.lng"></agm-marker>
+        >
+          <!--<agm-marker *ngFor="let m of markers" [latitude]="m.lat" [longitude]="m.lng"></agm-marker>-->
+          <agm-circle *ngFor="let m of markers" [latitude]="m.lat" [longitude]="m.lng" [radius]="10000"
+                      [draggable]="true"></agm-circle>
+        </agm-map>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+  <w-current-conditions *ngIf="currentConditions" [currentConditions]="currentConditions"></w-current-conditions>
+  <h2 *ngIf="!currentConditions">No weather data!</h2>
+
+</ion-content>
