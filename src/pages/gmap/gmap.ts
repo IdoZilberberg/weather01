@@ -18,7 +18,7 @@ declare var google;
 export class GMapPage /*implements OnInit*/ {
 
   @ViewChild("map") mapDiv: ElementRef;
-  @ViewChild("search") searchElementRef: ElementRef;
+  @ViewChild("search") searchElementRef: any;
 
   searchInput: string = '';
   autocompleteGoogleService: any;

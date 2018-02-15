@@ -18,6 +18,9 @@ export class WeatherService {
   _convertWuWeatheeToCurrentConditions(wuWeather: any): CurrentConditions {
 
     // return DEFAULT_CURRENT_CONDITIONS;
+    if(!wuWeather || !wuWeather.current_observation)  {
+      return null;
+    }
 
     const current = wuWeather.current_observation;
     const now = moment(current.local_epoch * 1000);

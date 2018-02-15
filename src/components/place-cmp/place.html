@@ -4,8 +4,8 @@
       <ion-col col-7>
         <strong>{{place.locality}}, {{place.state}}</strong>
         <p>Native name: {{country.nativeName}}</p>
-        <p>Population: {{country.population.toLocaleString()}}</p>
-        <p>Area: {{country.area.toLocaleString()}} sq.km</p>
+        <p>Population: {{country.population?.toLocaleString()}}</p>
+        <p>Area: {{country.area?.toLocaleString()}} sq.km</p>
         <p>Capital: {{country.capital}}</p>
         <p>Currency: {{country.currency}}</p>
       </ion-col>
