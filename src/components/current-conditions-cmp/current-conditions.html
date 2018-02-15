@@ -1,22 +1,35 @@
-<ion-grid>
-  <ion-row>
-    <ion-col><h1>{{currentConditions.country}}</h1></ion-col>
-  </ion-row>
-  <ion-row>
-    <ion-col>{{currentConditions.city}}</ion-col>
-  </ion-row>
-
-  <ion-row>
-    <ion-col><h2>{{currentConditions.temp}}°</h2></ion-col>
-    <ion-col><h2>{{currentConditions.relativeHumidity}}</h2></ion-col>
-  </ion-row>
-  <ion-row>
-    <ion-col>Rain: {{currentConditions.precipitationToday}} mm</ion-col>
-    <ion-col>Pressure: {{currentConditions.pressure}} mb</ion-col>
-  </ion-row>
-  <ion-row>
-    <ion-col>
-      <p>Station: {{currentConditions.station}}</p>
-    </ion-col>
-  </ion-row>
-</ion-grid>
+<div class="wrapper" *ngIf="currentConditions">
+  <ion-grid>
+    <ion-row>
+      <ion-col>
+        <ion-label>
+          <ion-icon name="thermometer"></ion-icon>
+          {{currentConditions.temp}}°
+        </ion-label>
+      </ion-col>
+      <ion-col>
+        <ion-label>
+          <ion-icon name="water"></ion-icon>
+          {{currentConditions.relativeHumidity}}
+        </ion-label>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <ion-label>
+          <ion-icon name="rainy"></ion-icon>
+          {{currentConditions.precipitationToday}} mm
+        </ion-label>
+      </ion-col>
+      <ion-col>Pressure: {{currentConditions.pressure}} mb</ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <p>
+          <small>Station: {{currentConditions.station}}</small>
+        </p>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</div>
+<!--<div *ngIf="!currentConditions"><small>Click the weather button to show current weather</small></div>-->

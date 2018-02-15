@@ -1,0 +1,18 @@
+<div class="wrapper" *ngIf="place && country">
+  <ion-grid>
+    <ion-row>
+      <ion-col col-7>
+        <strong>{{place.locality}}, {{place.state}}</strong>
+        <p>Native name: {{country.nativeName}}</p>
+        <p>Population: {{country.population.toLocaleString()}}</p>
+        <p>Area: {{country.area.toLocaleString()}} sq.km</p>
+        <p>Capital: {{country.capital}}</p>
+        <p>Currency: {{country.currency}}</p>
+      </ion-col>
+      <ion-col col-5>
+        <strong>{{place.country}}</strong>
+        <img class="flag-img" [src]="country.flagUrl">
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</div>

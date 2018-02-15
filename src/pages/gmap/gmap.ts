@@ -1,15 +1,12 @@
-import {Component, ElementRef, NgZone, OnInit, ViewChild} from "@angular/core/";
-import {IonicPage, LoadingController} from "ionic-angular";
+import {Component, ElementRef, NgZone, ViewChild} from "@angular/core/";
+import {IonicPage, LoadingController, ToastController} from "ionic-angular";
 import {Geolocation} from "@ionic-native/geolocation";
-import {UtilService} from "../../services/util";
+import {UtilService} from "../../services/util.service";
 import {Coords} from "../../models/coords.model";
-import {WeatherService} from "../../services/weather";
+import {WeatherService} from "../../services/weather.service";
 import {CurrentConditions} from "../../models/current-conditions.model";
 import {Place} from "../../models/place.model";
 import {PlacesService} from "../../services/places.service";
-import {platformBrowser} from "@angular/platform-browser";
-// import {PlacesAutocompleteService} from "../../services/places-autocomplete";
-// import { MapsAPILoader } from '@agm/core';
 
 declare var google;
 
@@ -21,10 +18,11 @@ declare var google;
 export class GMapPage /*implements OnInit*/ {
 
   @ViewChild("map") mapDiv: ElementRef;
-  // @ViewChild("search")
-  // public searchElementRef: ElementRef;
+  @ViewChild("search") searchElementRef: ElementRef;
 
   searchInput: string = '';
+  autocompleteGoogleService: any;
+  googleMap: any;
 
   markers: Coords[] = [
     {lat: 32.0, lng: 34.0},
@@ -33,57 +31,36 @@ export class GMapPage /*implements OnInit*/ {
   ];
 
   currentPlace: Place = {coords: {lng: 32.3173252, lat: 34.8469344}};
-  zoom: number = 16;
+  zoom: number = 12;
+  streetViewEnabled = true;
   currentConditions: CurrentConditions = null;
 
 
   constructor(private loadingCtrl: LoadingController,
+              private toastCtrl: ToastController,
               private geolocation: Geolocation,
               private weather: WeatherService,
               private util: UtilService,
-              private places: PlacesService
-              // private placesService: PlacesAutocompleteService,
-              // private mapsAPILoader: MapsAPILoader,
-              // private ngZone: NgZone
-              ) {
+              private places: PlacesService,
+              private ngZone: NgZone) {
   }
 
-  // ngOnInit(): void {
-  //
-  //   this.mapsAPILoader.load().then(() => {
-  //     let autocomplete = new google.maps.places.Autocomplete(this.searchElementRef, {
-  //       types: ["address"]
-  //     });
-  //     autocomplete.addListener("place_changed", () => {
-  //       this.ngZone.run(() => {
-  //         //get the place result
-  //         let place: google.maps.places.PlaceResult = autocomplete.getPlace();
-  //
-  //         //verify result
-  //         if (place.geometry === undefined || place.geometry === null) {
-  //           return;
-  //         }
-  //
-  //         //set latitude, longitude and zoom
-  //         this.currentPlace.lat = place.geometry.location.lat();
-  //         this.currentPlace.lng = place.geometry.location.lng();
-  //         this.zoom = 12;
-  //       });
-  //     });
-  //   });
-  // }
-
-  ionViewDidLoad() {
-    // this.onReloadWeather();
-  }
-
-  ionViewWillEnter() {
-    console.log('ionViewDidLoad MapPage');
-    this.places.initGoogleMapsPlacesService(this.mapDiv)
+  ngAfterViewInit() {
+    console.log('ngAfterViewInit MapPage');
+    this.places.initGoogleMapsPlacesService()
     .then(() => {
+      // this.googleMap = new google.maps.Map(this.mapDiv);
+      const autocompleteOptions = {};
+
+      const inputElement = this.searchElementRef.getNativeElement().getElementsByTagName('input')[0];
+      this.autocompleteGoogleService = new google.maps.places.Autocomplete(
+        inputElement, autocompleteOptions);
+
+      this.autocompleteGoogleService.addListener('place_changed', this._onPlaceChanged.bind(this));
       this.onLocate();
     });
   }
+
 
   onLocate() {
     const loading = this.loadingCtrl.create({
@@ -92,9 +69,9 @@ export class GMapPage /*implements OnInit*/ {
     loading.present();
     this.geolocation.getCurrentPosition()
     .then(location => {
+      this.searchInput = '';
       loading.dismiss();
-      this.currentPlace.coords.lat = location.coords.latitude;
-      this.currentPlace.coords.lng = location.coords.longitude;
+      this._updateCurrentPlace({lat: location.coords.latitude, lng: location.coords.longitude});
     })
     .catch(err => {
       loading.dismiss();
@@ -117,39 +94,41 @@ export class GMapPage /*implements OnInit*/ {
 
   }
 
-
-  onMapClick(ev: any) {
-
-    this.currentPlace.coords.lat = ev.coords.lat;
-    this.currentPlace.coords.lng = ev.coords.lng;
-    console.log(this.currentPlace);
-
-    this.places.nearbySearch(this.currentPlace.coords)
-    .then(locations => {
-      if(locations) {
-        this.currentPlace.locality = locations[0];
+  _updateCurrentPlace(coords: Coords) {
+    return this.places.resolvePlace(coords)
+    .then((place: Place) => {
+      if (place) {
+        this.currentPlace = place;
+      } else {
+        const toast = this.toastCtrl.create({
+          message: 'No result',
+          duration: 1500
+        });
+        toast.present();
       }
     });
 
+  }
 
+  onMapClick(ev: any) {
+    return this._updateCurrentPlace(ev.coords);
   }
 
   onAdd() {
     this.util.alert('Sorry', 'Not implemented!');
   }
 
-  // onSearchInput($event: UIEvent) {
-  //   console.log(`Search input: `, this.searchInput);
-  //   if(this.searchInput.length>0) {
-  //     this.placesService.getPlacesSuggestions(this.searchInput)
-  //     .subscribe(
-  //       (result) => {
-  //         console.log(result);
-  //       },
-  //       (error) => {
-  //         this.util.alertError(error.message);
-  //       }
-  //       );
-  //   }
-  // }
+  _onPlaceChanged() {
+    const googlePlace = this.autocompleteGoogleService.getPlace();
+    console.log('Place changed:', googlePlace);
+    if (googlePlace.geometry) {
+      this.ngZone.run(() => {
+        this.searchInput = '';
+        this._updateCurrentPlace(<Coords>{
+          lat: googlePlace.geometry.location.lat(),
+          lng: googlePlace.geometry.location.lng()
+        });
+      });
+    }
+  }
 }

@@ -1,5 +1,4 @@
 import {Observable} from "rxjs/Observable";
-import {DEFAULT_CURRENT_CONDITIONS} from "../app/constants";
 import "rxjs/add/observable/of";
 import {Coords} from "../models/coords.model";
 import {HttpClient} from "@angular/common/http";
@@ -21,17 +20,15 @@ export class WeatherService {
     // return DEFAULT_CURRENT_CONDITIONS;
 
     const current = wuWeather.current_observation;
-    const now = moment(current.local_epoch*1000);
+    const now = moment(current.local_epoch * 1000);
     const res = {
-      date: now.toISOString().substr(0,10),
+      date: now.toISOString().substr(0, 10),
       measurementTime: now.toISOString(),
       // country: current.display_location.state_name,
       // city: current.display_location.city,
-      place: {
-        coords: {
-          lat: current.observation_location.latitude,
-          lng: current.observation_location.longitude
-        }
+      coords: {
+        lat: current.observation_location.latitude,
+        lng: current.observation_location.longitude
       },
       station: current.observation_location.full,
       temp: current.temp_c,

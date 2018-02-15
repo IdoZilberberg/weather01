@@ -8,20 +8,23 @@ import {MyApp} from './app.component';
 import {HomePage} from '../pages/home/home';
 import {Geolocation} from "@ionic-native/geolocation";
 import {AgmCoreModule} from "@agm/core";
-import {UtilService} from "../services/util";
+import {UtilService} from "../services/util.service";
 import {CurrentConditionsComponent} from "../components/current-conditions-cmp/current-conditions.cmp";
 import {GMapPage} from "../pages/gmap/gmap";
-import {WeatherService} from "../services/weather";
+import {WeatherService} from "../services/weather.service";
 import {HttpClientModule} from "@angular/common/http";
 import {PlacesAutocompleteService} from "../services/places-autocomplete";
 import {PlacesService} from "../services/places.service";
+import {PlaceComponent} from "../components/place-cmp/place.cmp";
+import {CountriesService} from "../services/countries.service";
 
 @NgModule({
   declarations: [
     MyApp,
     HomePage,
     GMapPage,
-    CurrentConditionsComponent
+    CurrentConditionsComponent,
+    PlaceComponent
   ],
   imports: [
     BrowserModule,
@@ -46,7 +49,8 @@ import {PlacesService} from "../services/places.service";
     UtilService,
     WeatherService,
     PlacesAutocompleteService,
-    PlacesService
+    PlacesService,
+    CountriesService
   ]
 })
 export class AppModule {

@@ -1,7 +1,7 @@
 <ion-header>
   <ion-fab top right>
-    <button ion-fab (click)="onAdd()">
-      <ion-icon name="add"></ion-icon>
+    <button ion-fab (click)="onLocate()">
+      <ion-icon name="pin"></ion-icon>
     </button>
   </ion-fab>
 
@@ -11,33 +11,23 @@
 </ion-header>
 
 
-<ion-content padding>
-
+<ion-content>
   <ion-fab bottom right>
-    <button ion-fab (click)="onLocate()">
-      <ion-icon name="pin"></ion-icon>
-    </button>
     <button ion-fab (click)="onReloadWeather()">
       <ion-icon name="partly-sunny"></ion-icon>
     </button>
   </ion-fab>
 
+  <ion-searchbar #search
+                 [(ngModel)]="searchInput"
+                 [showCancelButton]="true">
+  </ion-searchbar>
   <ion-grid>
-    <ion-row>
-      <ion-col>
-        <ion-item>
-          <!--<ion-searchbar #search-->
-            <!--[(ngModel)]="searchInput"-->
-            <!--[showCancelButton]="true"-->
-            <!--(ionInput)="onSearchInput($event)">-->
-          <!--</ion-searchbar>-->
-        </ion-item>
-      </ion-col>
-    </ion-row>
     <ion-row>
       <ion-col>
         <agm-map #map
                  [latitude]="currentPlace.coords.lat" [longitude]="currentPlace.coords.lng" [zoom]="zoom"
+                 gestureHandling="greedy" [streetViewControl]="streetViewEnabled"
                  (mapClick)="onMapClick($event)">
           <agm-marker [latitude]="currentPlace.coords.lat" [longitude]="currentPlace.coords.lng"></agm-marker>
         >
@@ -49,7 +39,8 @@
     </ion-row>
   </ion-grid>
 
-  <w-current-conditions *ngIf="currentConditions" [currentConditions]="currentConditions"></w-current-conditions>
-  <h2 *ngIf="!currentConditions">No weather data!</h2>
+  <w-place [place]="currentPlace"></w-place>
+  <w-current-conditions [currentConditions]="currentConditions"></w-current-conditions>
+  <span *ngIf="!currentConditions"><small>Click the weather button to update</small></span>
 
 </ion-content>
