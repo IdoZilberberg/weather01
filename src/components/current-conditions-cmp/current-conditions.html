@@ -1,12 +1,22 @@
 <ion-grid>
   <ion-row>
-    <ion-col><h1>{{currentConditions.city}} {{currentConditions.country}}</h1></ion-col>
+    <ion-col><h1>{{currentConditions.country}}</h1></ion-col>
   </ion-row>
   <ion-row>
+    <ion-col>{{currentConditions.city}}</ion-col>
+  </ion-row>
+
+  <ion-row>
     <ion-col><h2>{{currentConditions.temp}}°</h2></ion-col>
-    <ion-col><h2>{{currentConditions.relativeHumidity}}%</h2></ion-col>
+    <ion-col><h2>{{currentConditions.relativeHumidity}}</h2></ion-col>
   </ion-row>
   <ion-row>
     <ion-col>Rain: {{currentConditions.precipitationToday}} mm</ion-col>
+    <ion-col>Pressure: {{currentConditions.pressure}} mb</ion-col>
+  </ion-row>
+  <ion-row>
+    <ion-col>
+      <p>Station: {{currentConditions.station}}</p>
+    </ion-col>
   </ion-row>
 </ion-grid>

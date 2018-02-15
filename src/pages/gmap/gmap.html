@@ -36,10 +36,10 @@
     </ion-row>
     <ion-row>
       <ion-col>
-        <agm-map
-          [latitude]="currentLocation.lat" [longitude]="currentLocation.lng" [zoom]="zoom"
-          (mapClick)="onMapClick($event)">
-          <agm-marker [latitude]="currentLocation.lat" [longitude]="currentLocation.lng"></agm-marker>
+        <agm-map #map
+                 [latitude]="currentPlace.coords.lat" [longitude]="currentPlace.coords.lng" [zoom]="zoom"
+                 (mapClick)="onMapClick($event)">
+          <agm-marker [latitude]="currentPlace.coords.lat" [longitude]="currentPlace.coords.lng"></agm-marker>
         >
           <!--<agm-marker *ngFor="let m of markers" [latitude]="m.lat" [longitude]="m.lng"></agm-marker>-->
           <agm-circle *ngFor="let m of markers" [latitude]="m.lat" [longitude]="m.lng" [radius]="10000"

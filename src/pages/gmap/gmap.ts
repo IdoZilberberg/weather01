@@ -2,12 +2,16 @@ import {Component, ElementRef, NgZone, OnInit, ViewChild} from "@angular/core/";
 import {IonicPage, LoadingController} from "ionic-angular";
 import {Geolocation} from "@ionic-native/geolocation";
 import {UtilService} from "../../services/util";
-import {Location} from "../../models/location";
+import {Coords} from "../../models/coords.model";
 import {WeatherService} from "../../services/weather";
-import {CurrentConditions} from "../../models/current-conditions";
+import {CurrentConditions} from "../../models/current-conditions.model";
+import {Place} from "../../models/place.model";
+import {PlacesService} from "../../services/places.service";
+import {platformBrowser} from "@angular/platform-browser";
 // import {PlacesAutocompleteService} from "../../services/places-autocomplete";
 // import { MapsAPILoader } from '@agm/core';
 
+declare var google;
 
 @IonicPage()
 @Component({
@@ -16,18 +20,19 @@ import {CurrentConditions} from "../../models/current-conditions";
 })
 export class GMapPage /*implements OnInit*/ {
 
+  @ViewChild("map") mapDiv: ElementRef;
   // @ViewChild("search")
   // public searchElementRef: ElementRef;
 
   searchInput: string = '';
 
-  markers: Location[] = [
+  markers: Coords[] = [
     {lat: 32.0, lng: 34.0},
     {lat: 32.0, lng: 34.3},
     {lat: 32.0, lng: 34.6}
   ];
 
-  currentLocation: Location = {lng: 32.3173252, lat: 34.8469344};
+  currentPlace: Place = {coords: {lng: 32.3173252, lat: 34.8469344}};
   zoom: number = 16;
   currentConditions: CurrentConditions = null;
 
@@ -36,6 +41,7 @@ export class GMapPage /*implements OnInit*/ {
               private geolocation: Geolocation,
               private weather: WeatherService,
               private util: UtilService,
+              private places: PlacesService
               // private placesService: PlacesAutocompleteService,
               // private mapsAPILoader: MapsAPILoader,
               // private ngZone: NgZone
@@ -59,8 +65,8 @@ export class GMapPage /*implements OnInit*/ {
   //         }
   //
   //         //set latitude, longitude and zoom
-  //         this.currentLocation.lat = place.geometry.location.lat();
-  //         this.currentLocation.lng = place.geometry.location.lng();
+  //         this.currentPlace.lat = place.geometry.location.lat();
+  //         this.currentPlace.lng = place.geometry.location.lng();
   //         this.zoom = 12;
   //       });
   //     });
@@ -68,12 +74,15 @@ export class GMapPage /*implements OnInit*/ {
   // }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad MapPage');
-    this.onLocate();
     // this.onReloadWeather();
   }
 
   ionViewWillEnter() {
+    console.log('ionViewDidLoad MapPage');
+    this.places.initGoogleMapsPlacesService(this.mapDiv)
+    .then(() => {
+      this.onLocate();
+    });
   }
 
   onLocate() {
@@ -84,10 +93,8 @@ export class GMapPage /*implements OnInit*/ {
     this.geolocation.getCurrentPosition()
     .then(location => {
       loading.dismiss();
-      this.currentLocation.lat = location.coords.latitude;
-      this.currentLocation.lng = location.coords.longitude;
-
-
+      this.currentPlace.coords.lat = location.coords.latitude;
+      this.currentPlace.coords.lng = location.coords.longitude;
     })
     .catch(err => {
       loading.dismiss();
@@ -99,7 +106,7 @@ export class GMapPage /*implements OnInit*/ {
   onReloadWeather() {
     console.log('Reloading weather');
 
-    this.weather.getCurrentConditionsForLocation(this.currentLocation)
+    this.weather.getCurrentConditionsForLocation(this.currentPlace.coords)
     .subscribe(
       (currentConditions: CurrentConditions) => {
         this.currentConditions = currentConditions;
@@ -111,11 +118,19 @@ export class GMapPage /*implements OnInit*/ {
   }
 
 
-  onMapClick(ev: MouseEvent) {
+  onMapClick(ev: any) {
 
-    this.currentLocation.lat = ev.coords.lat;
-    this.currentLocation.lng = ev.coords.lng;
-    console.log(this.currentLocation);
+    this.currentPlace.coords.lat = ev.coords.lat;
+    this.currentPlace.coords.lng = ev.coords.lng;
+    console.log(this.currentPlace);
+
+    this.places.nearbySearch(this.currentPlace.coords)
+    .then(locations => {
+      if(locations) {
+        this.currentPlace.locality = locations[0];
+      }
+    });
+
 
   }
 

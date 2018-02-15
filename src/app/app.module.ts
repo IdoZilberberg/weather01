@@ -14,6 +14,7 @@ import {GMapPage} from "../pages/gmap/gmap";
 import {WeatherService} from "../services/weather";
 import {HttpClientModule} from "@angular/common/http";
 import {PlacesAutocompleteService} from "../services/places-autocomplete";
+import {PlacesService} from "../services/places.service";
 
 @NgModule({
   declarations: [
@@ -44,7 +45,8 @@ import {PlacesAutocompleteService} from "../services/places-autocomplete";
     Geolocation,
     UtilService,
     WeatherService,
-    PlacesAutocompleteService
+    PlacesAutocompleteService,
+    PlacesService
   ]
 })
 export class AppModule {

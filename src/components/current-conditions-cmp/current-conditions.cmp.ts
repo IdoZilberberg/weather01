@@ -1,5 +1,5 @@
 import {Component, Input} from "@angular/core";
-import {CurrentConditions} from "../../models/current-conditions";
+import {CurrentConditions} from "../../models/current-conditions.model";
 
 @Component({
   selector: 'w-current-conditions',
