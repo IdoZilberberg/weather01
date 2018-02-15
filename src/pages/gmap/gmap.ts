@@ -30,7 +30,7 @@ export class GMapPage /*implements OnInit*/ {
     {lat: 32.0, lng: 34.6}
   ];
 
-  currentPlace: Place = {coords: {lng: 32.3173252, lat: 34.8469344}};
+  currentPlace: Place = {coords: {lat: 32.3098, lng: 34.8739}};
   zoom: number = 12;
   streetViewEnabled = true;
   currentConditions: CurrentConditions = null;
