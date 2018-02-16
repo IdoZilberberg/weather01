@@ -35,6 +35,7 @@ export class WeatherService {
       },
       station: current.observation_location.full,
       temp: current.temp_c,
+      weather: current.weather,
       relativeHumidity: current.relative_humidity,
       dewPoint: current.dewpoint_c,
       precipitationToday: current.precip_today_metric,
@@ -53,6 +54,13 @@ export class WeatherService {
     .map((wuWeather: any) => {
       return this._convertWuWeatheeToCurrentConditions(wuWeather);
     });
+  }
+
+
+  getForecastForLocation(location: Coords): Observable<Forecast>  {
+
+
+
   }
 
   // getDailyWeatherForCity(city: string): Observable<CurrentConditions> {

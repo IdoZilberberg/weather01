@@ -7,6 +7,7 @@ export class CurrentConditions  {
   coords: Coords;
   station?: string; // weather station name
   temp: number;
+  weather?: string;
   relativeHumidity: number;
   dewPoint?: number;
   precipitationToday: number;
