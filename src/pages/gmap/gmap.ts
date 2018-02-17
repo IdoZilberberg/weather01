@@ -8,7 +8,6 @@ import {CurrentConditions} from "../../models/current-conditions.model";
 import {Place} from "../../models/place.model";
 import {PlacesService} from "../../services/places.service";
 import {Forecast} from "../../models/forecats.model";
-import {DEFAULT_FORECASTS, DEFAULT_CURRENT_CONDITIONS} from "../../app/constants";
 
 
 declare var google;
@@ -25,13 +24,13 @@ export class GMapPage /*implements OnInit*/ {
 
   searchInput: string = '';
   autocompleteGoogleService: any;
-  googleMap: any;
+  // googleMap: any;
 
-  markers: Coords[] = [
-    {lat: 32.0, lng: 34.0},
-    {lat: 32.0, lng: 34.3},
-    {lat: 32.0, lng: 34.6}
-  ];
+  // markers: Coords[] = [
+  //   {lat: 32.0, lng: 34.0},
+  //   {lat: 32.0, lng: 34.3},
+  //   {lat: 32.0, lng: 34.6}
+  // ];
 
   currentPlace: Place = {coords: {lat: 32.3098, lng: 34.8739}};
   zoom: number = 12;

@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="com.idoz.weather01" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget id="com.idoz.weather01" version="0.0.2" android-packageName="com.idoz.weather01" android-versionCode="000002" ios-CFBundleIdentifier="com.idoz.weather01" ios-CFBundleVersion="0.0.2.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <name>weather01</name>
     <description>My Weather app</description>
     <author email="izilberberg@gmail.com" href="http://ionicframework.com/">IZ</author>
