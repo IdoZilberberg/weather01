@@ -1,4 +1,4 @@
-import {Component, Input, OnChanges, SimpleChanges} from "@angular/core";
+import {Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from "@angular/core";
 import {CurrentConditions} from "../../models/current-conditions.model";
 
 @Component({
@@ -8,6 +8,7 @@ import {CurrentConditions} from "../../models/current-conditions.model";
 export class CurrentConditionsComponent implements OnChanges {
 
   @Input() currentConditions: CurrentConditions;
+  @Output() onClickTemp = new EventEmitter<void>();
 
   ngOnChanges(changes: SimpleChanges): void {
     console.log('current cond changes: ', changes);
@@ -15,6 +16,11 @@ export class CurrentConditionsComponent implements OnChanges {
 
   ionViewWillEnter() {
     console.log('current conditions: ', this.currentConditions);
+  }
+
+  clickTemp() {
+    console.log('clickTemp');
+    this.onClickTemp.emit();
   }
 
 }

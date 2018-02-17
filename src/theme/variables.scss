@@ -23,7 +23,7 @@ $app-direction: ltr;
 // To view all the possible Ionic variables, see:
 // http://ionicframework.com/docs/theming/overriding-ionic-variables/
 
-$background-color: #b6ba8c;
+$background-color: #d2d5b5;
 $grid-padding-width: 0;
 $h6-font-size: 1.6rem;
 
@@ -37,8 +37,9 @@ $h6-font-size: 1.6rem;
 // The "primary" color is the only required color in the map.
 
 $colors: (
-  primary:    #488aff,
-  secondary:  #32db64,
+  primary: #66a3cc,
+  //secondary:  #32db64,
+  secondary: #7bac86,
   danger:     #f53d3d,
   light:      #f4f4f4,
   dark:       #222

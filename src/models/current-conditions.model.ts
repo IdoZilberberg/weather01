@@ -11,4 +11,7 @@ export class CurrentConditions  {
   relativeHumidity: number;
   dewPoint?: number;
   precipitationToday: number;
+  icon?: string;
+  iconUrl?: string;
+  feelsLike: number;
 }

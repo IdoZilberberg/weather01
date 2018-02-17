@@ -16,6 +16,7 @@ import {HttpClientModule} from "@angular/common/http";
 import {PlacesAutocompleteService} from "../services/places-autocomplete";
 import {PlacesService} from "../services/places.service";
 import {PlaceComponent} from "../components/place-cmp/place.cmp";
+import {ForecastComponent} from "../components/forecast-cmp/forecast.cmp";
 import {CountriesService} from "../services/countries.service";
 
 @NgModule({
@@ -24,6 +25,7 @@ import {CountriesService} from "../services/countries.service";
     HomePage,
     GMapPage,
     CurrentConditionsComponent,
+    ForecastComponent,
     PlaceComponent
   ],
   imports: [

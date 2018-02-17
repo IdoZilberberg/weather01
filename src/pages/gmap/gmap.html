@@ -1,23 +1,20 @@
 <ion-header>
   <ion-fab top right>
-    <button ion-fab (click)="onLocate()">
+    <button ion-fab color="secondary" (click)="onLocate()">
       <ion-icon name="pin"></ion-icon>
+    </button>
+    <button ion-fab color="secondary" (click)="onReloadWeather()">
+      <ion-icon name="partly-sunny"></ion-icon>
     </button>
   </ion-fab>
 
-  <ion-navbar>
+  <ion-navbar color="primary">
     <ion-title>Map</ion-title>
   </ion-navbar>
 </ion-header>
 
 
 <ion-content>
-  <ion-fab bottom right>
-    <button ion-fab (click)="onReloadWeather()">
-      <ion-icon name="partly-sunny"></ion-icon>
-    </button>
-  </ion-fab>
-
   <ion-searchbar #search
                  [(ngModel)]="searchInput"
                  [showCancelButton]="true">
@@ -40,7 +37,14 @@
   </ion-grid>
 
   <w-place [place]="currentPlace"></w-place>
-  <w-current-conditions [currentConditions]="currentConditions"></w-current-conditions>
+  <w-current-conditions [currentConditions]="currentConditions" (onClickTemp)="onClickTemp()"></w-current-conditions>
+
+  <ion-slides slidesPerView="2" class="forecast-slides">
+    <ion-slide *ngFor="let item of forecasts">
+      <w-forecast [forecast]="item"></w-forecast>
+    </ion-slide>
+  </ion-slides>
+
   <span *ngIf="!currentConditions"><small>Click the weather button to update</small></span>
 
 </ion-content>

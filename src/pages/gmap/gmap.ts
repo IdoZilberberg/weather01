@@ -7,6 +7,9 @@ import {WeatherService} from "../../services/weather.service";
 import {CurrentConditions} from "../../models/current-conditions.model";
 import {Place} from "../../models/place.model";
 import {PlacesService} from "../../services/places.service";
+import {Forecast} from "../../models/forecats.model";
+import {DEFAULT_FORECASTS, DEFAULT_CURRENT_CONDITIONS} from "../../app/constants";
+
 
 declare var google;
 
@@ -33,7 +36,8 @@ export class GMapPage /*implements OnInit*/ {
   currentPlace: Place = {coords: {lat: 32.3098, lng: 34.8739}};
   zoom: number = 12;
   streetViewEnabled = true;
-  currentConditions: CurrentConditions = null;
+  currentConditions: CurrentConditions = null; //DEFAULT_CURRENT_CONDITIONS;
+  forecasts: Forecast[] = []; //DEFAULT_FORECASTS;
 
 
   constructor(private loadingCtrl: LoadingController,
@@ -87,11 +91,35 @@ export class GMapPage /*implements OnInit*/ {
     .subscribe(
       (currentConditions: CurrentConditions) => {
         this.currentConditions = currentConditions;
+        console.log('Current conditions', this.currentConditions);
       },
       error => {
         this.util.alertError(error.message);
       });
 
+    this.weather.getForecastForLocation(this.currentPlace.coords)
+    .subscribe(
+      (forecasts: Forecast[]) => {
+        this.forecasts = forecasts;
+        console.log(forecasts);
+      },
+      error => {
+        this.util.alertError(error.message);
+      });
+
+  }
+
+  onClickTemp() {
+    console.log('onClickTemp');
+    this.weather.getForecastForLocation(this.currentPlace.coords)
+    .subscribe(
+      (forecasts: Forecast[]) => {
+        this.forecasts = forecasts;
+        console.log(forecasts);
+      },
+      error => {
+        this.util.alertError(error.message);
+      });
   }
 
   _updateCurrentPlace(coords: Coords) {
@@ -128,6 +156,8 @@ export class GMapPage /*implements OnInit*/ {
           lat: googlePlace.geometry.location.lat(),
           lng: googlePlace.geometry.location.lng()
         });
+        this.currentConditions = null;
+        this.forecasts = [];
       });
     }
   }

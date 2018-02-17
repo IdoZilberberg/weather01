@@ -6,6 +6,7 @@ import "rxjs/add/operator/map";
 import {Injectable} from "@angular/core";
 import {CurrentConditions} from "../models/current-conditions.model";
 import moment from 'moment';
+import {Forecast} from "../models/forecats.model";
 
 const WU_KEY = '189ac1342315df89';
 
@@ -15,7 +16,32 @@ export class WeatherService {
   constructor(private http: HttpClient) {
   }
 
-  _convertWuWeatheeToCurrentConditions(wuWeather: any): CurrentConditions {
+  _convertWuForecastToForecast(coords: Coords, wuForecast: any): Forecast {
+
+    const now = moment(wuForecast.date.epoch * 1000);
+
+    const forecast = <Forecast>{
+      date: now.toISOString().substr(0, 10),
+      measurementTime: now.toISOString(),
+      coords: coords,
+      tempHigh: wuForecast.high.celsius,
+      tempLow: wuForecast.low.celsius,
+      conditions: wuForecast.conditions,
+      icon: wuForecast.icon,
+      iconUrl: wuForecast.icon_url,
+      rainDay: wuForecast.qpf_day.mm || 0,
+      rainNight: wuForecast.qpf_night.mm || 0,
+      snowDay: wuForecast.snow_day.mm || 0,
+      snowNight: wuForecast.snow_night.mm || 0,
+      windSpeed: wuForecast.avewind.kph,
+      windDirection: wuForecast.avewind.dir
+    };
+
+    return forecast;
+
+  }
+
+  _convertWuWeatherToCurrentConditions(wuWeather: any): CurrentConditions {
 
     // return DEFAULT_CURRENT_CONDITIONS;
     if(!wuWeather || !wuWeather.current_observation)  {
@@ -24,7 +50,7 @@ export class WeatherService {
 
     const current = wuWeather.current_observation;
     const now = moment(current.local_epoch * 1000);
-    const res = {
+    const res = <CurrentConditions>{
       date: now.toISOString().substr(0, 10),
       measurementTime: now.toISOString(),
       // country: current.display_location.state_name,
@@ -33,32 +59,50 @@ export class WeatherService {
         lat: current.observation_location.latitude,
         lng: current.observation_location.longitude
       },
+      icon: current.icon,
+      iconUrl: current.icon_url,
       station: current.observation_location.full,
+      feelsLike: current.feelslike_c,
       temp: current.temp_c,
       weather: current.weather,
       relativeHumidity: current.relative_humidity,
       dewPoint: current.dewpoint_c,
-      precipitationToday: current.precip_today_metric,
+      precipitationToday: current.precip_today_metric || 0,
       pressure: current.pressure_mb
     };
     return res;
   }
 
-  getCurrentConditionsForLocation(location: Coords): Observable<CurrentConditions> {
+  getCurrentConditionsForLocation(coords: Coords): Observable<CurrentConditions> {
 
-    const url = `http://api.wunderground.com/api/${WU_KEY}/conditions/q/${location.lat},${location.lng}.json`;
+    const url = `http://api.wunderground.com/api/${WU_KEY}/conditions/q/${coords.lat},${coords.lng}.json`;
 
     // return Observable.of(null)
 
     return this.http.get(url)
-    .map((wuWeather: any) => {
-      return this._convertWuWeatheeToCurrentConditions(wuWeather);
+    .map((wuCurrentConditions: any) => {
+      return this._convertWuWeatherToCurrentConditions(wuCurrentConditions);
     });
   }
 
 
-  getForecastForLocation(location: Coords): Observable<Forecast>  {
+  getForecastForLocation(coords: Coords): Observable<Forecast[]>  {
 
+    const url = `http://api.wunderground.com/api/${WU_KEY}/forecast/q/${coords.lat},${coords.lng}.json`;
+
+    console.log(`Getting forecast: ${url}`);
+    // http://api.wunderground.com/api/189ac1342315df89/forecast/q/32.30,34.89.json
+
+    return this.http.get(url)
+    .map((wuForecastResult: any) => {
+
+      const wuForecasts: any[] = wuForecastResult.forecast.simpleforecast.forecastday;
+
+      const forecasts: Forecast[] = wuForecasts.map(wuForecast => this._convertWuForecastToForecast(coords, wuForecast));
+
+
+      return forecasts;
+    });
 
 
   }

@@ -6,6 +6,32 @@ w-page-gmap {
     height: 250px;
   }
 
+  w-place {
+    border-bottom: 1px solid;
+    display: block;
+  }
+
+  w-current-conditions  {
+    border-bottom: 1px solid;
+    display: block;
+  }
+
+  w-forecast  {
+    //border-right: 1px solid;
+    //border-left: 1px solid;
+    display: block;
+  }
+
+  .forecast-slides  {
+    display: block;
+    height: auto;
+  }
+
+  .grid  {
+    padding-right: 8px;
+    padding-left: 8px;
+  }
+
   ion-searchbar {
     padding-top: 0;
   }
