@@ -1,10 +1,10 @@
-# General
+## General
 
 My personal Weather app, started as an exercise for myself after completing the excellent Udemy course [Ionic 2 - the practial guide to building iOS and Android apps](https://www.udemy.com/ionic-2-the-practical-guide-to-building-ios-android-apps/learn/v4/overview) by Maximillian Schwartzmüller.
 
 This is a **personal project for demonstration purpose only**. 
 Feel free to fork and modify, but I'm not responsible for any damages that may arise as result of doing anything whatsoever with this software, either in its current form or any fork thereof.
-I will add a license and relevant attributions before pushing to any app store.
+I will add relevant attributions before pushing to any app store.
 This is completely free software and has no ads or in-app purchases of any kind.
 
 ## Installation
@@ -34,3 +34,6 @@ The app was built with Ionic 3 / Angular 5.
 - [Weather underground API](https://www.wunderground.com/weather/api/d/docs) for current conditions and forecasts
 - [REST Countries](https://restcountries.eu/) for displaying population, captial, flag, etc.
 
+## To do
+- Add attributions for the above integrations
+- Replace date with "Today", "Tonight", "Tomorrow" markings - easier to read.
