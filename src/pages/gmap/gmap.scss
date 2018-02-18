@@ -2,19 +2,31 @@ w-page-gmap {
 
   background-image: url('../../assets/imgs/Tileable-Texture-Seamless-01.jpg');
 
+  scroll-content {
+    display: flex;
+    flex-direction: column;
+  }
+
+  ion-grid  {
+    padding: 0;
+    height: 100%;
+  }
+
   agm-map {
-    height: 250px;
+    //height: 250px;
+    height: 100%;
   }
 
   w-place {
-    border-bottom: 1px solid;
+    //border-bottom: 1px solid;
     display: block;
   }
 
-  w-current-conditions  {
-    border-bottom: 1px solid;
-    display: block;
-  }
+  //w-current-conditions  {
+  //  //border-bottom: 1px solid;
+  //  display: block;
+  //  align-items: center;
+  //}
 
   w-forecast  {
     //border-right: 1px solid;
@@ -32,6 +44,10 @@ w-page-gmap {
     padding-left: 8px;
   }
 
+  //ion-row {
+  //  align-items: center;
+  //}
+  //
   ion-searchbar {
     padding-top: 0;
   }

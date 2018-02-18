@@ -23,6 +23,7 @@ export class GMapPage /*implements OnInit*/ {
   @ViewChild("search") searchElementRef: any;
 
   searchInput: string = '';
+  searchVisible = false;
   autocompleteGoogleService: any;
   // googleMap: any;
 
@@ -37,6 +38,7 @@ export class GMapPage /*implements OnInit*/ {
   streetViewEnabled = true;
   currentConditions: CurrentConditions = null; //DEFAULT_CURRENT_CONDITIONS;
   forecasts: Forecast[] = []; //DEFAULT_FORECASTS;
+  hourlyForecasts: Forecast[] = [];
 
 
   constructor(private loadingCtrl: LoadingController,
@@ -83,6 +85,10 @@ export class GMapPage /*implements OnInit*/ {
 
   }
 
+  onToggleSearch()  {
+    this.searchVisible = !this.searchVisible;
+  }
+
   onReloadWeather() {
     console.log('Reloading weather');
 
@@ -96,11 +102,21 @@ export class GMapPage /*implements OnInit*/ {
         this.util.alertError(error.message);
       });
 
-    this.weather.getForecastForLocation(this.currentPlace.coords)
+    this.weather.getForecastsForLocation(this.currentPlace.coords)
     .subscribe(
       (forecasts: Forecast[]) => {
         this.forecasts = forecasts;
-        console.log(forecasts);
+        console.log('Forecasts: ', forecasts);
+      },
+      error => {
+        this.util.alertError(error.message);
+      });
+
+    this.weather.getHourlyForecastsForLocation(this.currentPlace.coords)
+    .subscribe(
+      (hourlyForecasts: Forecast[]) => {
+        this.hourlyForecasts = hourlyForecasts;
+        console.log('Hourly forecasts: ', hourlyForecasts);
       },
       error => {
         this.util.alertError(error.message);
@@ -110,7 +126,7 @@ export class GMapPage /*implements OnInit*/ {
 
   onClickTemp() {
     console.log('onClickTemp');
-    this.weather.getForecastForLocation(this.currentPlace.coords)
+    this.weather.getForecastsForLocation(this.currentPlace.coords)
     .subscribe(
       (forecasts: Forecast[]) => {
         this.forecasts = forecasts;

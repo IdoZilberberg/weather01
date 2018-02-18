@@ -1,14 +1,18 @@
 w-current-conditions {
-  .wrapper {
-    padding: 8px;
-  }
+  //.wrapper {
+  //  padding: 8px;
+  //}
 
   .label-md {
     margin: 0;
   }
 
   .weather-icon  {
-    height: 30px;
+    height: 40px;
 
+  }
+
+  ion-row {
+    align-items: center;
   }
 }

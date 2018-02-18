@@ -1,50 +1,80 @@
 <ion-header>
-  <ion-fab top right>
-    <button ion-fab color="secondary" (click)="onLocate()">
-      <ion-icon name="pin"></ion-icon>
-    </button>
-    <button ion-fab color="secondary" (click)="onReloadWeather()">
-      <ion-icon name="partly-sunny"></ion-icon>
-    </button>
-  </ion-fab>
+  <!--<ion-fab top right>-->
+    <!--<button ion-fab color="secondary" (click)="onLocate()">-->
+      <!--<ion-icon name="pin"></ion-icon>-->
+    <!--</button>-->
+    <!--<button ion-fab color="secondary" (click)="onReloadWeather()">-->
+      <!--<ion-icon name="partly-sunny"></ion-icon>-->
+    <!--</button>-->
+  <!--</ion-fab>-->
 
   <ion-navbar color="primary">
     <ion-title>Map</ion-title>
+    <ion-buttons end>
+      <button ion-button icon-only (click)="onToggleSearch()">
+        <ion-icon name="search"></ion-icon>
+      </button>
+      <button ion-button icon-only (click)="onReloadWeather()">
+        <ion-icon name="partly-sunny"></ion-icon>
+      </button>
+      <button ion-button icon-only (click)="onLocate()">
+        <ion-icon name="pin"></ion-icon>
+      </button>
+    </ion-buttons>
   </ion-navbar>
 </ion-header>
 
 
 <ion-content>
-  <ion-searchbar #search
-                 [(ngModel)]="searchInput"
-                 [showCancelButton]="true">
+  <ion-searchbar [hidden]="!searchVisible" #search
+                 [(ngModel)]="searchInput">
   </ion-searchbar>
+
   <ion-grid>
-    <ion-row>
+    <ion-row style="flex: 4;">
       <ion-col>
         <agm-map #map
                  [latitude]="currentPlace.coords.lat" [longitude]="currentPlace.coords.lng" [zoom]="zoom"
                  gestureHandling="greedy" [streetViewControl]="streetViewEnabled"
                  (mapClick)="onMapClick($event)">
           <agm-marker [latitude]="currentPlace.coords.lat" [longitude]="currentPlace.coords.lng"></agm-marker>
-        >
+          >
           <!--<agm-marker *ngFor="let m of markers" [latitude]="m.lat" [longitude]="m.lng"></agm-marker>-->
           <!--<agm-circle *ngFor="let m of markers" [latitude]="m.lat" [longitude]="m.lng" [radius]="10000"-->
-                      <!--[draggable]="true"></agm-circle>-->
+          <!--[draggable]="true"></agm-circle>-->
         </agm-map>
       </ion-col>
     </ion-row>
+    <ion-row style="flex: 3;">
+      <ion-col>
+        <w-place [place]="currentPlace"></w-place>
+      </ion-col>
+    </ion-row>
+    <ion-row style="flex: 1;">
+      <ion-col>
+        <w-current-conditions [currentConditions]="currentConditions"
+                              (onClickTemp)="onClickTemp()"></w-current-conditions>
+      </ion-col>
+    </ion-row>
+    <ion-row style="flex: 4;">
+      <ion-col>
+        <ion-slides slidesPerView="2" class="forecast-slides">
+          <ion-slide *ngFor="let item of hourlyForecasts">
+            <w-hourly-forecast [forecast]="item"></w-hourly-forecast>
+          </ion-slide>
+        </ion-slides>
+      </ion-col>
+    </ion-row>
+    <ion-row style="flex: 3;">
+      <ion-col>
+        <ion-slides slidesPerView="2" class="forecast-slides">
+          <ion-slide *ngFor="let item of forecasts">
+            <w-forecast [forecast]="item"></w-forecast>
+          </ion-slide>
+        </ion-slides>
+      </ion-col>
+    </ion-row>
+    <span *ngIf="!currentConditions"><small>Click the weather button to update</small></span>
   </ion-grid>
-
-  <w-place [place]="currentPlace"></w-place>
-  <w-current-conditions [currentConditions]="currentConditions" (onClickTemp)="onClickTemp()"></w-current-conditions>
-
-  <ion-slides slidesPerView="2" class="forecast-slides">
-    <ion-slide *ngFor="let item of forecasts">
-      <w-forecast [forecast]="item"></w-forecast>
-    </ion-slide>
-  </ion-slides>
-
-  <span *ngIf="!currentConditions"><small>Click the weather button to update</small></span>
 
 </ion-content>

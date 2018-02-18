@@ -16,13 +16,42 @@ export class WeatherService {
   constructor(private http: HttpClient) {
   }
 
+  _convertWuHourlyForecastToForecast(coords: Coords, wuHourlyForecast: any): Forecast  {
+
+    const targetTime = moment(wuHourlyForecast.FCTTIME.epoch * 1000);
+
+    const forecast: Forecast = {
+      targetDate: targetTime.toISOString().substr(0, 10),
+      targetDateDisplay: targetTime.format('ddd D/M'),
+      targetTimeDisplay: targetTime.format('H:mm'),
+      // targetTimeDisplay: targetTime.fromNow(),
+      coords: coords,
+      temp: wuHourlyForecast.temp.metric,
+      feelsLike: wuHourlyForecast.feelslike,
+      dewPoint: wuHourlyForecast.dewpoint,
+      conditions: wuHourlyForecast.condition,
+      icon: wuHourlyForecast.icon,
+      iconUrl: wuHourlyForecast.icon_url,
+      humidity: wuHourlyForecast.humidity,
+      rain: wuHourlyForecast.qpf.metric,
+      snow: wuHourlyForecast.snow.metric,
+      windDirection: wuHourlyForecast.wdir.dir,
+      windSpeed: wuHourlyForecast.wspd.metric
+    };
+
+    return forecast;
+
+
+  }
+
   _convertWuForecastToForecast(coords: Coords, wuForecast: any): Forecast {
 
-    const now = moment(wuForecast.date.epoch * 1000);
+    const targetTime = moment(wuForecast.date.epoch * 1000);
 
-    const forecast = <Forecast>{
-      date: now.toISOString().substr(0, 10),
-      measurementTime: now.toISOString(),
+    const forecast: Forecast = {
+      targetDate: targetTime.toISOString().substr(0, 10),
+      targetDateDisplay: targetTime.format('ddd D/M'),
+      targetTimeDisplay: targetTime.format('H:mm'),
       coords: coords,
       tempHigh: wuForecast.high.celsius,
       tempLow: wuForecast.low.celsius,
@@ -67,7 +96,7 @@ export class WeatherService {
       weather: current.weather,
       relativeHumidity: current.relative_humidity,
       dewPoint: current.dewpoint_c,
-      precipitationToday: current.precip_today_metric || 0,
+      precipitationToday: current.precip_today_metric === '--' ? 0 : current.precip_today_metric,
       pressure: current.pressure_mb
     };
     return res;
@@ -85,8 +114,25 @@ export class WeatherService {
     });
   }
 
+  getHourlyForecastsForLocation(coords: Coords): Observable<Forecast[]>  {
+    const url = `http://api.wunderground.com/api/${WU_KEY}/hourly/q/${coords.lat},${coords.lng}.json`;
+    console.log(`Getting hourly forecast: ${url}`);
 
-  getForecastForLocation(coords: Coords): Observable<Forecast[]>  {
+    return this.http.get(url)
+    .map((wuForecastResult: any) => {
+
+      const wuForecasts: any[] = wuForecastResult.hourly_forecast;
+
+      const forecasts: Forecast[] = wuForecasts.map(wuForecast => this._convertWuHourlyForecastToForecast(coords, wuForecast));
+
+
+      return forecasts;
+    });
+
+  }
+
+
+  getForecastsForLocation(coords: Coords): Observable<Forecast[]>  {
 
     const url = `http://api.wunderground.com/api/${WU_KEY}/forecast/q/${coords.lat},${coords.lng}.json`;
 

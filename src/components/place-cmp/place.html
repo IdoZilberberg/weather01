@@ -1,5 +1,4 @@
 <div class="wrapper" *ngIf="place && country">
-  <ion-grid>
     <ion-row>
       <ion-col col-7>
         <strong>{{place.locality}}, {{place.state}}</strong>
@@ -9,10 +8,9 @@
         <p>Capital: {{country.capital}}</p>
         <p>Currency: {{country.currency}}</p>
       </ion-col>
-      <ion-col col-5>
+      <ion-col col-5 class="flag">
         <strong>{{place.country}}</strong>
         <img class="flag-img" [src]="country.flagUrl">
       </ion-col>
     </ion-row>
-  </ion-grid>
 </div>

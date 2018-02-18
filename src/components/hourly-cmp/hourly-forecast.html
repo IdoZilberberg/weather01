@@ -1,0 +1,25 @@
+<div class="wrapper" *ngIf="forecast">
+  <ion-item no-padding>
+    <img class="weather-icon" [src]="forecast.iconUrl">
+    <h3>{{forecast.targetDateDisplay}} {{forecast.targetTimeDisplay}}</h3>
+    <p icon-left><ion-icon name="thermometer"></ion-icon>{{forecast.temp}}°</p>
+    <p *ngIf="forecast.rain > 0" icon-left><ion-icon name="rainy"></ion-icon>Day: {{forecast.rain||0}} mm</p>
+    <p *ngIf="forecast.snow > 0" icon-left><ion-icon name="snow"></ion-icon>Day: {{forecast.snow||0}} mm</p>
+    <p>Wind: {{forecast.windDirection}} {{forecast.windSpeed}} kph</p>
+  </ion-item>
+
+  <!--<ion-grid>-->
+    <!--<ion-row>-->
+      <!--<ion-col>Date: {{forecast.targetDate}}</ion-col>-->
+    <!--</ion-row>-->
+    <!--<ion-row>-->
+      <!--<ion-col>Low: {{forecast.tempLow}}° High: {{forecast.tempHigh}}°</ion-col>-->
+      <!--<ion-col><img [src]="forecast.iconUrl">{{forecast.conditions}}</ion-col>-->
+    <!--</ion-row>-->
+    <!--<ion-row>-->
+      <!--<ion-col>{{forecast.rainDay}} + {{forecast.rainNight}} mm</ion-col>-->
+      <!--<ion-col>{{forecast.windDirection}} {{forecast.windSpeed}} kph</ion-col>-->
+    <!--</ion-row>-->
+  <!--</ion-grid>-->
+</div>
+<div *ngIf="!forecast"><small>No forecast</small></div>

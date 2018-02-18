@@ -33,8 +33,8 @@ export const DEFAULT_CURRENT_CONDITIONS: CurrentConditions = {
 export const DEFAULT_FORECASTS: Forecast[] = [
 
   {
-    date: '2018-01-02',
-    measurementTime: '2018-01-02T01:00:00.000',
+    targetDate: '2018-01-02',
+    targetTime: '2018-01-02T01:00:00.000',
     coords: <Coords>{
       lat: 32.30,
       lng: 34.87
@@ -51,8 +51,8 @@ export const DEFAULT_FORECASTS: Forecast[] = [
     windDirection: 'ESE'
   },
   {
-    date: '2018-01-03',
-    measurementTime: '2018-01-03T01:00:00.000',
+    targetDate: '2018-01-03',
+    targetTime: '2018-01-03T01:00:00.000',
     coords: <Coords>{
       lat: 32.30,
       lng: 34.87
@@ -71,8 +71,8 @@ export const DEFAULT_FORECASTS: Forecast[] = [
     windDirection: 'E'
   },
   {
-    date: '2018-01-04',
-    measurementTime: '2018-01-04T01:00:00.000',
+    targetDate: '2018-01-04',
+    targetTime: '2018-01-04T01:00:00.000',
     coords: {
       lat: 32.30,
       lng: 34.87
