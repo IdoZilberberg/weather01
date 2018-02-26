@@ -1,14 +1,16 @@
 w-current-conditions {
-  //.wrapper {
-  //  padding: 8px;
-  //}
+  .wrapper {
+    padding-left: 8px;
+    background-color: #6ec3d4;
+  }
 
   .label-md {
     margin: 0;
+    font-size: 12px;
   }
 
   .weather-icon  {
-    height: 40px;
+    height: 30px;
 
   }
 

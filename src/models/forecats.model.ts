@@ -2,7 +2,7 @@ import {Coords} from "./coords.model";
 
 export class Forecast {
 
-  targetDate: string;
+  targetDate?: string;
   targetTime?: string;
   targetDateDisplay?: string;
   targetTimeDisplay?: string;
@@ -17,13 +17,14 @@ export class Forecast {
   icon: string;
   iconUrl: string;
   humidity?: string;
+  percentOfPrecipitation?: number;
   rain?: number;
   rainDay?: number;
   rainNight?: number;
   snow?: number;
   snowDay?: number;
   snowNight?: number;
-  windSpeed: number;
-  windDirection: string;
+  windSpeed?: number;
+  windDirection?: string;
 
 }

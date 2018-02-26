@@ -1,6 +1,5 @@
-import {Component, Input, OnChanges, SimpleChanges} from "@angular/core";
+import {Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from "@angular/core";
 import {Place} from "../../models/place.model";
-import {CountriesService} from "../../services/countries.service";
 import {Country} from "../../models/country.model";
 
 @Component({
@@ -9,32 +8,27 @@ import {Country} from "../../models/country.model";
 })
 export class PlaceComponent implements OnChanges {
   @Input() place: Place;
+  @Output() flagClicked = new EventEmitter<void>();
 
   country: Country = <Country>{};
 
-  constructor(private countriesService: CountriesService) {}
+  constructor() {}
 
   ngOnChanges(changes: SimpleChanges): void {
     console.log('current place changes: ', changes);
 
-    if(changes.place && changes.place.currentValue) {
-      if(changes.place.previousValue && changes.place.previousValue.countryCode === changes.place.currentValue.countryCode) {
-        return;
-      }
+    // if(changes.place && changes.place.currentValue) {
+    //   if(changes.place.previousValue && changes.place.previousValue.countryCode === changes.place.currentValue.countryCode) {
+    //     return;
+    //   }
+    // }
+    //
+  }
 
-      this.countriesService.getCountryInfo(changes.place.currentValue.countryCode)
-      .subscribe(
-        country => {
-          this.country = country;
-        },
-        error => {
-          console.log('Error', error.message);
-        }
+  onClickFlag() {
 
-      );
+    this.flagClicked.emit();
 
-
-    }
 
   }
 

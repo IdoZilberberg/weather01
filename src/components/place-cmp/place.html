@@ -1,16 +1,16 @@
-<div class="wrapper" *ngIf="place && country">
+<div class="wrapper" *ngIf="place && place.countryInfo">
     <ion-row>
       <ion-col col-7>
         <strong>{{place.locality}}, {{place.state}}</strong>
-        <p>Native name: {{country.nativeName}}</p>
-        <p>Population: {{country.population?.toLocaleString()}}</p>
-        <p>Area: {{country.area?.toLocaleString()}} sq.km</p>
-        <p>Capital: {{country.capital}}</p>
-        <p>Currency: {{country.currency}}</p>
+        <p>Native name: {{place.countryInfo?.nativeName}}</p>
+        <p>Population: {{place.countryInfo?.population?.toLocaleString()}}</p>
+        <p>Area: {{place.countryInfo?.area?.toLocaleString()}} sq.km</p>
+        <p>Capital: {{place.countryInfo?.capital}}</p>
+        <p>Currency: {{place.countryInfo?.currency}}</p>
       </ion-col>
       <ion-col col-5 class="flag">
-        <strong>{{place.country}}</strong>
-        <img class="flag-img" [src]="country.flagUrl">
+        <strong>{{place.countryInfo?.name}}</strong>
+        <img class="flag-img" [src]="place.countryInfo?.flagUrl" (click)="onClickFlag()">
       </ion-col>
     </ion-row>
 </div>

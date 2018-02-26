@@ -1,5 +1,5 @@
 import {Component, ElementRef, NgZone, ViewChild} from "@angular/core/";
-import {IonicPage, LoadingController, ToastController} from "ionic-angular";
+import {IonicPage, LoadingController, NavController, Slides, ToastController} from "ionic-angular";
 import {Geolocation} from "@ionic-native/geolocation";
 import {UtilService} from "../../services/util.service";
 import {Coords} from "../../models/coords.model";
@@ -8,6 +8,8 @@ import {CurrentConditions} from "../../models/current-conditions.model";
 import {Place} from "../../models/place.model";
 import {PlacesService} from "../../services/places.service";
 import {Forecast} from "../../models/forecats.model";
+import {PlacePage} from "../place/place.page";
+import {CountriesService} from "../../services/countries.service";
 
 
 declare var google;
@@ -21,6 +23,9 @@ export class GMapPage /*implements OnInit*/ {
 
   @ViewChild("map") mapDiv: ElementRef;
   @ViewChild("search") searchElementRef: any;
+  @ViewChild("hourlySlides") hourlySlides: Slides;
+  @ViewChild("dailySlides") dailySlides: Slides;
+
 
   searchInput: string = '';
   searchVisible = false;
@@ -41,12 +46,15 @@ export class GMapPage /*implements OnInit*/ {
   hourlyForecasts: Forecast[] = [];
 
 
-  constructor(private loadingCtrl: LoadingController,
+  constructor(
+              private navCtrl: NavController,
+              private loadingCtrl: LoadingController,
               private toastCtrl: ToastController,
               private geolocation: Geolocation,
               private weather: WeatherService,
               private util: UtilService,
               private places: PlacesService,
+              private countries: CountriesService,
               private ngZone: NgZone) {
   }
 
@@ -76,7 +84,10 @@ export class GMapPage /*implements OnInit*/ {
     .then(location => {
       this.searchInput = '';
       loading.dismiss();
-      this._updateCurrentPlace({lat: location.coords.latitude, lng: location.coords.longitude});
+      return this._updateCurrentPlace({lat: location.coords.latitude, lng: location.coords.longitude});
+    })
+    .then(() => {
+      this.onReloadWeather();
     })
     .catch(err => {
       loading.dismiss();
@@ -122,6 +133,9 @@ export class GMapPage /*implements OnInit*/ {
         this.util.alertError(error.message);
       });
 
+    this.hourlySlides.slideTo(0);
+    this.dailySlides.slideTo(0);
+
   }
 
   onClickTemp() {
@@ -140,14 +154,29 @@ export class GMapPage /*implements OnInit*/ {
   _updateCurrentPlace(coords: Coords) {
     return this.places.resolvePlace(coords)
     .then((place: Place) => {
-      if (place) {
-        this.currentPlace = place;
+      const newPlace = place;
+      if (newPlace) {
+        this.countries.getCountryInfo(newPlace.countryCode)
+        .subscribe(
+          countryInfo => {
+            newPlace.countryInfo = countryInfo;
+            this.currentPlace = newPlace;
+          },
+          error => {
+            console.log('Error', error.message);
+          }
+
+        );
+
+
+        return this.currentPlace;
       } else {
         const toast = this.toastCtrl.create({
           message: 'No result',
           duration: 1500
         });
         toast.present();
+        return null;
       }
     });
 
@@ -162,18 +191,31 @@ export class GMapPage /*implements OnInit*/ {
   }
 
   _onPlaceChanged() {
+    this.searchVisible = false;
     const googlePlace = this.autocompleteGoogleService.getPlace();
     console.log('Place changed:', googlePlace);
     if (googlePlace.geometry) {
       this.ngZone.run(() => {
         this.searchInput = '';
-        this._updateCurrentPlace(<Coords>{
+        return this._updateCurrentPlace(<Coords>{
           lat: googlePlace.geometry.location.lat(),
           lng: googlePlace.geometry.location.lng()
+        })
+        .then(() => {
+          return this.onReloadWeather();
+        })
+        .catch(error => {
+          this.util.alert('Center on searched place', error.message);
+          this.currentConditions = null;
+          this.forecasts = [];
+          this.hourlyForecasts = [];
         });
-        this.currentConditions = null;
-        this.forecasts = [];
       });
     }
+  }
+
+  onClickFlagOnPlace(place: Place) {
+    console.log('gmap: Open place page');
+    this.navCtrl.push(PlacePage, {place: place});
   }
 }

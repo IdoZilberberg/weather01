@@ -25,9 +25,11 @@
 </ion-header>
 
 
-<ion-content>
-  <ion-searchbar [hidden]="!searchVisible" #search
-                 [(ngModel)]="searchInput">
+<ion-content no-scroll>
+  <ion-searchbar no-padding
+    class="place-search"
+    [hidden]="!searchVisible" #search
+    [(ngModel)]="searchInput">
   </ion-searchbar>
 
   <ion-grid>
@@ -45,20 +47,20 @@
         </agm-map>
       </ion-col>
     </ion-row>
-    <ion-row style="flex: 3;">
+    <ion-row style="flex: 2.4;">
       <ion-col>
-        <w-place [place]="currentPlace"></w-place>
+        <w-place [place]="currentPlace" (flagClicked)="onClickFlagOnPlace(currentPlace)"></w-place>
       </ion-col>
     </ion-row>
-    <ion-row style="flex: 1;">
+    <ion-row style="flex: 0.6;">
       <ion-col>
         <w-current-conditions [currentConditions]="currentConditions"
                               (onClickTemp)="onClickTemp()"></w-current-conditions>
       </ion-col>
     </ion-row>
-    <ion-row style="flex: 4;">
+    <ion-row style="flex: 2;">
       <ion-col>
-        <ion-slides slidesPerView="2" class="forecast-slides">
+        <ion-slides #hourlySlides slidesPerView="3" class="forecast-slides">
           <ion-slide *ngFor="let item of hourlyForecasts">
             <w-hourly-forecast [forecast]="item"></w-hourly-forecast>
           </ion-slide>
@@ -67,7 +69,7 @@
     </ion-row>
     <ion-row style="flex: 3;">
       <ion-col>
-        <ion-slides slidesPerView="2" class="forecast-slides">
+        <ion-slides #dailySlides slidesPerView="3" class="forecast-slides">
           <ion-slide *ngFor="let item of forecasts">
             <w-forecast [forecast]="item"></w-forecast>
           </ion-slide>

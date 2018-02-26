@@ -19,12 +19,14 @@ import {PlaceComponent} from "../components/place-cmp/place.cmp";
 import {ForecastComponent} from "../components/hourly-forecast-cmp/forecast.cmp";
 import {CountriesService} from "../services/countries.service";
 import {HourlyForecastComponent} from "../components/hourly-cmp/hourly-forecast.cmp";
+import {PlacePage} from "../pages/place/place.page";
 
 @NgModule({
   declarations: [
     MyApp,
     HomePage,
     GMapPage,
+    PlacePage,
     CurrentConditionsComponent,
     ForecastComponent,
     HourlyForecastComponent,
@@ -43,7 +45,8 @@ import {HourlyForecastComponent} from "../components/hourly-cmp/hourly-forecast.
   entryComponents: [
     MyApp,
     HomePage,
-    GMapPage
+    GMapPage,
+    PlacePage
   ],
   providers: [
     StatusBar,

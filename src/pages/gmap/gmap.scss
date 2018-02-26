@@ -2,6 +2,12 @@ w-page-gmap {
 
   background-image: url('../../assets/imgs/Tileable-Texture-Seamless-01.jpg');
 
+  .place-search {
+    position: absolute;
+    top: 0;
+    z-index: inherit;
+  }
+
   scroll-content {
     display: flex;
     flex-direction: column;
@@ -39,10 +45,10 @@ w-page-gmap {
     height: auto;
   }
 
-  .grid  {
-    padding-right: 8px;
-    padding-left: 8px;
-  }
+  //.grid  {
+  //  padding-right: 8px;
+  //  padding-left: 8px;
+  //}
 
   //ion-row {
   //  align-items: center;

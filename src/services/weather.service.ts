@@ -44,7 +44,7 @@ export class WeatherService {
 
   }
 
-  _convertWuForecastToForecast(coords: Coords, wuForecast: any): Forecast {
+  _convertWuSimpleForecastToForecast(coords: Coords, wuForecast: any): Forecast {
 
     const targetTime = moment(wuForecast.date.epoch * 1000);
 
@@ -69,6 +69,32 @@ export class WeatherService {
     return forecast;
 
   }
+
+  private _convertWuTxtForecastToForecast(coords: Coords, wuForecast: any): Forecast {
+    // const targetTime = moment(wuForecast.date.epoch * 1000);
+    const forecast: Forecast = {
+      // targetDate: targetTime.toISOString().substr(0, 10),
+      targetDateDisplay: wuForecast.title,
+      // targetTimeDisplay: targetTime.format('H:mm'),
+      conditions: wuForecast.fcttext_metric,
+      coords: coords,
+      // tempHigh: wuForecast.high.celsius,
+      // tempLow: wuForecast.low.celsius,
+      icon: wuForecast.icon,
+      iconUrl: wuForecast.icon_url,
+      percentOfPrecipitation: wuForecast.pop
+      // rainDay: wuForecast.qpf_day.mm || 0,
+      // rainNight: wuForecast.qpf_night.mm || 0,
+      // snowDay: wuForecast.snow_day.mm || 0,
+      // snowNight: wuForecast.snow_night.mm || 0,
+      // windSpeed: wuForecast.avewind.kph,
+      // windDirection: wuForecast.avewind.dir
+    };
+
+    return forecast;
+
+  }
+
 
   _convertWuWeatherToCurrentConditions(wuWeather: any): CurrentConditions {
 
@@ -142,9 +168,12 @@ export class WeatherService {
     return this.http.get(url)
     .map((wuForecastResult: any) => {
 
-      const wuForecasts: any[] = wuForecastResult.forecast.simpleforecast.forecastday;
+      // const wuSimpleForecasts: any[] = wuForecastResult.forecast.simpleforecast.forecastday;
+      const wuTxtForecasts: any[] = wuForecastResult.forecast.txt_forecast.forecastday;
 
-      const forecasts: Forecast[] = wuForecasts.map(wuForecast => this._convertWuForecastToForecast(coords, wuForecast));
+      // const forecasts: Forecast[] = wuSimpleForecasts.map(wuSimpleForecast => this._convertWuSimpleForecastToForecast(coords, wuSimpleForecast));
+      const forecasts: Forecast[] = wuTxtForecasts.map(wuTxtForecast => this._convertWuTxtForecastToForecast(coords, wuTxtForecast));
+
 
 
       return forecasts;
